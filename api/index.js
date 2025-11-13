@@ -5,7 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { generateFittingRoomImage, generateImageFromTextPrompt, generateSceneFromTextPrompt } from '../services/geminiService.js';
+import { generateFittingRoomImage, generateImageFromTextPrompt, generateSceneFromTextPrompt } from '../services/nanobananaService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -40,7 +40,7 @@ const upload = multer({
 
 // Health check
 app.get('/api/health', (req, res) => {
-  const hasApiKey = !!(process.env.GEMINI_API_KEY || process.env.API_KEY);
+  const hasApiKey = !!(process.env.NANOBANANA_API_KEY || process.env.API_KEY);
   res.json({ 
     status: 'ok',
     hasApiKey,
