@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "local-nanobanana": {
+      "command": "node",
+      "args": [
+        "server.js"
+      ],
+      "cwd": ".",
+      "env": {
+        "PORT": "3000"
+      }
+    }
+  }
+}
