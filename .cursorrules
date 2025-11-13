@@ -1,0 +1,25 @@
+# Cursor Rules for n8n MCP Integration
+
+This project includes an MCP (Model Context Protocol) server for n8n integration.
+
+## MCP Server Configuration
+
+The MCP server is located at `mcp-server.js` and provides tools for:
+- Listing n8n workflows
+- Executing workflows
+- Getting workflow status
+- Triggering webhooks
+
+## Environment Variables
+
+Set these in your `.env` file:
+- `N8N_API_URL` - Your n8n instance URL (default: http://localhost:5678)
+- `N8N_API_KEY` - Your n8n API key (optional, but recommended)
+
+## Running the MCP Server
+
+```bash
+npm run mcp
+```
+
+The server communicates via stdio and is designed to be used with Cursor Mobile's MCP integration.
