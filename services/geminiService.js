@@ -15,7 +15,7 @@ const ai = new GoogleGenAI({ apiKey });
 // For image generation, use models that support Modality.IMAGE
 const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp';
 
-console.log(`Using нанабанана model: ${model}`);
+console.log(`Using Gemini model: ${model}`);
 
 const fileToGenerativePart = (base64, mimeType) => {
   return {
@@ -27,7 +27,7 @@ const fileToGenerativePart = (base64, mimeType) => {
 };
 
 const handleApiError = (error) => {
-    console.error("Error generating image with нанабанана API:", error);
+    console.error("Error generating image with Gemini API:", error);
     
     // Handle Gemini API error format
     if (error?.error) {
@@ -37,7 +37,7 @@ const handleApiError = (error) => {
         if (apiError.code === 429 || apiError.status === 'RESOURCE_EXHAUSTED') {
             const retryDelay = apiError.details?.find(d => d['@type']?.includes('RetryInfo'))?.retryDelay || '20s';
             throw new Error(
-                `Превышена квота API. На бесплатном тарифе нанабанана API есть ограничения.\n\n` +
+                `Превышена квота API. На бесплатном тарифе Google Gemini API есть ограничения.\n\n` +
                 `Попробуйте снова через ${retryDelay} или перейдите на платный тариф.\n\n` +
                 `Подробнее: https://ai.google.dev/gemini-api/docs/rate-limits`
             );

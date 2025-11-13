@@ -15,7 +15,7 @@
   "errorTitle": "Ошибка",
   "resultTitle": "Результат",
   "resultPlaceholder": "Ваше сгенерированное изображение появится здесь.",
-  "poweredBy": "Создано с помощью нанабанана",
+  "poweredBy": "Создано с помощью Google Gemini",
   "dragDrop": "Перетащите или",
   "browseFile": "выберите файл",
   "errorInvalidFileType": "Неверный тип файла. Пожалуйста, загрузите изображение в формате JPG, PNG или WEBP.",

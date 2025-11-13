@@ -15,7 +15,7 @@
   "errorTitle": "Помилка",
   "resultTitle": "Результат",
   "resultPlaceholder": "Ваше згенероване зображення з'явиться тут.",
-  "poweredBy": "Створено за допомогою нанабанана",
+  "poweredBy": "Створено за допомогою Google Gemini",
   "dragDrop": "Перетягніть або",
   "browseFile": "виберіть файл",
   "errorInvalidFileType": "Невірний тип файлу. Будь ласка, завантажте зображення у форматі JPG, PNG або WEBP.",
