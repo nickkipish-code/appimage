@@ -40,7 +40,12 @@ const upload = multer({
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
+  const hasApiKey = !!(process.env.GEMINI_API_KEY || process.env.API_KEY);
+  res.json({ 
+    status: 'ok',
+    hasApiKey,
+    message: hasApiKey ? 'API key is configured' : 'WARNING: API key is not configured'
+  });
 });
 
 // Generate image from person + clothing images
@@ -49,26 +54,39 @@ app.post('/api/generate/fitting-room', upload.fields([
   { name: 'clothingImage', maxCount: 1 }
 ]), async (req, res) => {
   try {
+    console.log('Received fitting-room request');
     if (!req.files || !req.files.personImage || !req.files.clothingImage) {
+      console.error('Missing files:', { files: req.files });
       return res.status(400).json({ error: 'Both person and clothing images are required' });
     }
 
     const personFile = req.files.personImage[0];
     const clothingFile = req.files.clothingImage[0];
 
+    console.log('Files received:', {
+      personSize: personFile.size,
+      personType: personFile.mimetype,
+      clothingSize: clothingFile.size,
+      clothingType: clothingFile.mimetype
+    });
+
     const personImageBase64 = personFile.buffer.toString('base64');
     const clothingImageBase64 = clothingFile.buffer.toString('base64');
 
+    console.log('Calling generateFittingRoomImage...');
     const resultBase64 = await generateFittingRoomImage(
       { base64: personImageBase64, mimeType: personFile.mimetype },
       { base64: clothingImageBase64, mimeType: clothingFile.mimetype }
     );
 
+    console.log('Image generated successfully, size:', resultBase64?.length);
     res.json({ image: resultBase64 });
   } catch (error) {
     console.error('Error generating fitting room image:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      error: error instanceof Error ? error.message : 'An unknown error occurred',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
@@ -76,27 +94,40 @@ app.post('/api/generate/fitting-room', upload.fields([
 // Generate image from person image + text prompt
 app.post('/api/generate/text-prompt', upload.single('personImage'), async (req, res) => {
   try {
+    console.log('Received text-prompt request');
     if (!req.file) {
+      console.error('Missing person image file');
       return res.status(400).json({ error: 'Person image is required' });
     }
 
     const { textPrompt } = req.body;
     if (!textPrompt || !textPrompt.trim()) {
+      console.error('Missing text prompt');
       return res.status(400).json({ error: 'Text prompt is required' });
     }
 
+    console.log('Processing request:', {
+      fileSize: req.file.size,
+      fileType: req.file.mimetype,
+      promptLength: textPrompt.length
+    });
+
     const personImageBase64 = req.file.buffer.toString('base64');
 
+    console.log('Calling generateImageFromTextPrompt...');
     const resultBase64 = await generateImageFromTextPrompt(
       { base64: personImageBase64, mimeType: req.file.mimetype },
       textPrompt.trim()
     );
 
+    console.log('Image generated successfully');
     res.json({ image: resultBase64 });
   } catch (error) {
     console.error('Error generating image from text prompt:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      error: error instanceof Error ? error.message : 'An unknown error occurred',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
@@ -104,27 +135,40 @@ app.post('/api/generate/text-prompt', upload.single('personImage'), async (req, 
 // Generate scene from person image + text prompt
 app.post('/api/generate/scene', upload.single('personImage'), async (req, res) => {
   try {
+    console.log('Received scene request');
     if (!req.file) {
+      console.error('Missing person image file');
       return res.status(400).json({ error: 'Person image is required' });
     }
 
     const { textPrompt } = req.body;
     if (!textPrompt || !textPrompt.trim()) {
+      console.error('Missing text prompt');
       return res.status(400).json({ error: 'Text prompt is required' });
     }
 
+    console.log('Processing scene request:', {
+      fileSize: req.file.size,
+      fileType: req.file.mimetype,
+      promptLength: textPrompt.length
+    });
+
     const personImageBase64 = req.file.buffer.toString('base64');
 
+    console.log('Calling generateSceneFromTextPrompt...');
     const resultBase64 = await generateSceneFromTextPrompt(
       { base64: personImageBase64, mimeType: req.file.mimetype },
       textPrompt.trim()
     );
 
+    console.log('Scene generated successfully');
     res.json({ image: resultBase64 });
   } catch (error) {
     console.error('Error generating scene:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      error: error instanceof Error ? error.message : 'An unknown error occurred',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });

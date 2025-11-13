@@ -272,17 +272,29 @@ generateBtn.addEventListener('click', async () => {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to generate image');
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (e) {
+        errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+      }
+      console.error('API Error:', errorData);
+      throw new Error(errorData.error || `Failed to generate image (${response.status})`);
     }
 
     const data = await response.json();
+    
+    if (!data.image) {
+      throw new Error('No image data received from server');
+    }
+    
     resultImg.src = `data:image/png;base64,${data.image}`;
     resultPreview.classList.remove('hidden');
     resultPlaceholder.classList.add('hidden');
   } catch (error) {
-    showError(error.message || 'An unknown error occurred');
-    console.error(error);
+    console.error('Generation error:', error);
+    const errorMessage = error.message || 'An unknown error occurred. Please check the console for details.';
+    showError(errorMessage);
   } finally {
     setLoading(false);
   }

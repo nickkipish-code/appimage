@@ -1,7 +1,14 @@
 import { GoogleGenAI, Modality } from "@google/genai";
 
 // The API key is injected from the environment.
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY });
+const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
+
+if (!apiKey) {
+  console.error('GEMINI_API_KEY is not set in environment variables');
+  throw new Error('GEMINI_API_KEY environment variable is required');
+}
+
+const ai = new GoogleGenAI({ apiKey });
 
 const model = 'gemini-2.5-flash-image';
 
