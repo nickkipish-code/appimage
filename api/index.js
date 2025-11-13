@@ -83,10 +83,30 @@ app.post('/api/generate/fitting-room', upload.fields([
     res.json({ image: resultBase64 });
   } catch (error) {
     console.error('Error generating fitting room image:', error);
-    console.error('Error stack:', error.stack);
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'An unknown error occurred',
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    console.error('Error stack:', error?.stack);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    
+    // Extract error message
+    let errorMessage = 'An unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error?.error?.message) {
+      errorMessage = error.error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    }
+    
+    // Determine status code
+    let statusCode = 500;
+    if (error?.error?.code === 429 || error?.error?.status === 'RESOURCE_EXHAUSTED') {
+      statusCode = 429;
+    } else if (error?.error?.code) {
+      statusCode = error.error.code;
+    }
+    
+    res.status(statusCode).json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error?.stack : undefined
     });
   }
 });
@@ -124,10 +144,28 @@ app.post('/api/generate/text-prompt', upload.single('personImage'), async (req, 
     res.json({ image: resultBase64 });
   } catch (error) {
     console.error('Error generating image from text prompt:', error);
-    console.error('Error stack:', error.stack);
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'An unknown error occurred',
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    console.error('Error stack:', error?.stack);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    
+    let errorMessage = 'An unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error?.error?.message) {
+      errorMessage = error.error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    }
+    
+    let statusCode = 500;
+    if (error?.error?.code === 429 || error?.error?.status === 'RESOURCE_EXHAUSTED') {
+      statusCode = 429;
+    } else if (error?.error?.code) {
+      statusCode = error.error.code;
+    }
+    
+    res.status(statusCode).json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error?.stack : undefined
     });
   }
 });
@@ -165,10 +203,28 @@ app.post('/api/generate/scene', upload.single('personImage'), async (req, res) =
     res.json({ image: resultBase64 });
   } catch (error) {
     console.error('Error generating scene:', error);
-    console.error('Error stack:', error.stack);
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'An unknown error occurred',
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    console.error('Error stack:', error?.stack);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    
+    let errorMessage = 'An unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error?.error?.message) {
+      errorMessage = error.error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    }
+    
+    let statusCode = 500;
+    if (error?.error?.code === 429 || error?.error?.status === 'RESOURCE_EXHAUSTED') {
+      statusCode = 429;
+    } else if (error?.error?.code) {
+      statusCode = error.error.code;
+    }
+    
+    res.status(statusCode).json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error?.stack : undefined
     });
   }
 });
