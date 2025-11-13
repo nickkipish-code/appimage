@@ -10,7 +10,12 @@ if (!apiKey) {
 
 const ai = new GoogleGenAI({ apiKey });
 
-const model = 'gemini-2.5-flash-image';
+// Use environment variable for model, fallback to gemini-2.0-flash-exp
+// Available models: gemini-2.0-flash-exp, gemini-1.5-flash, gemini-1.5-pro
+// For image generation, use models that support Modality.IMAGE
+const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp';
+
+console.log(`Using Gemini model: ${model}`);
 
 const fileToGenerativePart = (base64, mimeType) => {
   return {
@@ -35,6 +40,17 @@ const handleApiError = (error) => {
                 `Превышена квота API. На бесплатном тарифе Google Gemini API есть ограничения.\n\n` +
                 `Попробуйте снова через ${retryDelay} или перейдите на платный тариф.\n\n` +
                 `Подробнее: https://ai.google.dev/gemini-api/docs/rate-limits`
+            );
+        }
+        
+        // Model not supported error
+        if (apiError.message?.includes('not supported') || apiError.message?.includes('unsupported')) {
+            throw new Error(
+                `Модель ${model} не поддерживает генерацию изображений.\n\n` +
+                `Попробуйте использовать модель с поддержкой Modality.IMAGE, например:\n` +
+                `- gemini-2.5-flash-image\n` +
+                `- gemini-2.0-flash-exp\n\n` +
+                `Установите переменную окружения GEMINI_MODEL для выбора модели.`
             );
         }
         
