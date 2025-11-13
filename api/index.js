@@ -15,7 +15,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
+// Static files are served automatically by Vercel from public folder
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
