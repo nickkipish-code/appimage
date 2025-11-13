@@ -1,0 +1,22 @@
+[
+  {
+    "id": "order-status",
+    "name": "Order Status Lookup",
+    "description": "Fetch an order status from the CRM and return it to the caller.",
+    "webhookPath": "webhook/order-status",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "defaultPayload": {
+      "includeHistory": true
+    }
+  },
+  {
+    "id": "support-ticket",
+    "name": "Create Support Ticket",
+    "description": "Create a ticket in the service desk using the provided payload.",
+    "webhookPath": "webhook/support-ticket",
+    "method": "POST"
+  }
+]
