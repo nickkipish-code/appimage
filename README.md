@@ -55,3 +55,13 @@
 - `POST /api/generate/text-prompt` - Генерация изображения из фото человека и текстового описания
 - `POST /api/generate/scene` - Изменение сцены на фотографии
 - `GET /api/locales/:lang` - Получение переводов (ru/uk)
+
+## Интеграция с Model Context Protocol и n8n
+
+Чтобы запускать сценарии n8n прямо из Cursor Mobile, в проект добавлен MCP-сервер (`npm run mcp:n8n`), который публикует инструменты:
+
+- `n8n.listWorkflows` — список доступных воркфлоу
+- `n8n.executeWorkflow` — немедленный запуск воркфлоу с параметрами
+- `n8n.getExecution` — проверка статуса выполнения
+
+Подробная инструкция по настройке (создание API ключа, запуск моста и подключение Cursor Mobile) находится в файле [`docs/mcp-n8n-setup.md`](docs/mcp-n8n-setup.md).
