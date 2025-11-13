@@ -15,7 +15,9 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-// Static files are served automatically by Vercel from public folder
+
+// Serve static files from public folder
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
@@ -136,6 +138,15 @@ app.get('/api/locales/:lang', (req, res) => {
       res.status(404).json({ error: 'Translation file not found' });
     }
   });
+});
+
+// Fallback: serve index.html for all non-API routes (SPA routing)
+app.get('*', (req, res) => {
+  // Don't serve index.html for API routes
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'Not found' });
+  }
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // Export for Vercel serverless
